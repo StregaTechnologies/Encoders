@@ -1,16 +1,17 @@
 function Decoder(bytes, port) {
   var ports = port;
+  var v4_1 = toHexString(bytes);
   var msg = String.fromCharCode.apply(null, bytes);
   var length = msg.length;
-  var v4_t = ascii_to_hexa(msg.substr(6,10));
-  var temp = v4_t.substr(0,4);
+  var v4_2 = v4_1.substr(12,8);
+  var temp = v4_2.substr(0,4);
   var box_temp = parseInt((temp), 16);
   var temperature = (((box_temp/65536)*165)-40);
-  var hum = v4_t.substr(4,8);
+  var hum = v4_2.substr(4,8);
   var box_hum = parseInt((hum), 16);
   var hygrometry = ((box_hum/65536)*100);
   var bat = msg.substr(0,4);
-  var battery = (bat-2000)/16;
+  var battery = Math.round((bat-2000)/16);
   var st = msg.substr(4,1);
   var sta = dec_to_bho(st,'B');
   var status = pad(sta,2);
@@ -66,8 +67,13 @@ function ascii_to_hexa(str)
 	 }
 	return arr1.join('');
    }
+function toHexString(bytes) {
+    return bytes.map(function(byte) {
+        return ("00" + (byte & 0xFF).toString(16)).slice(-2);
+      }).join('');
+}
 
-if (v4!="#" && conf_p===14 || conf_p===15 || conf_p===16 || conf_p===17 || conf_p===18 || conf_p===19 || conf_p===20){
+if (v4==="@" && conf_p===14 || conf_p===15 || conf_p===16 || conf_p===17 || conf_p===18 || conf_p===19 || conf_p===20){
   return {
       Port: ports,
       Battery: battery,
@@ -77,7 +83,7 @@ if (v4!="#" && conf_p===14 || conf_p===15 || conf_p===16 || conf_p===17 || conf_
       Schl_Port : conf_p || 0,
       Schl_status : conf_s || 0,
   };}
-  if (v4!="#" && conf_p===21){
+  if (v4==="@" && conf_p===21){
   return {
       Port: ports,
       Battery: battery,
@@ -87,7 +93,7 @@ if (v4!="#" && conf_p===14 || conf_p===15 || conf_p===16 || conf_p===17 || conf_
       Schl_status_Port : conf_p || 0,
       Schl_status_ack : conf_s || 0,
   };}
-  else if(v4!="#" && conf_p===12 || conf_p===13){
+  else if(v4==="@" && conf_p===12 || conf_p===13){
     return {
       Port: ports,
       Battery: battery,
@@ -96,11 +102,8 @@ if (v4!="#" && conf_p===14 || conf_p===15 || conf_p===16 || conf_p===17 || conf_
       Status : status,
       RTC_Port : conf_p || 0,
       RTC_status : conf_s || 0,
-      test :msg,
-      test1 :conf_p,
-      test2 : v4
   };}
-  else if(ports===4 && length===10 || length>=10){
+  else if(v4==="#"){
      return {
       Port: ports,
       Battery: battery,
