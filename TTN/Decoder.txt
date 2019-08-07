@@ -72,8 +72,8 @@ function toHexString(bytes) {
         return ("00" + (byte & 0xFF).toString(16)).slice(-2);
       }).join('');
 }
-
-if (v4==="@" && conf_p===14 || conf_p===15 || conf_p===16 || conf_p===17 || conf_p===18 || conf_p===19 || conf_p===20){
+if (v4==="@"){
+if (conf_p===14 || conf_p===15 || conf_p===16 || conf_p===17 || conf_p===18 || conf_p===19 || conf_p===20){
   return {
       Port: ports,
       Battery: battery,
@@ -83,7 +83,7 @@ if (v4==="@" && conf_p===14 || conf_p===15 || conf_p===16 || conf_p===17 || conf
       Schl_Port : conf_p || 0,
       Schl_status : conf_s || 0,
   };}
-  if (v4==="@" && conf_p===21){
+  if (conf_p===21){
   return {
       Port: ports,
       Battery: battery,
@@ -93,7 +93,7 @@ if (v4==="@" && conf_p===14 || conf_p===15 || conf_p===16 || conf_p===17 || conf
       Schl_status_Port : conf_p || 0,
       Schl_status_ack : conf_s || 0,
   };}
-  else if(v4==="@" && conf_p===12 || conf_p===13){
+  if(conf_p===12 || conf_p===13){
     return {
       Port: ports,
       Battery: battery,
@@ -102,8 +102,8 @@ if (v4==="@" && conf_p===14 || conf_p===15 || conf_p===16 || conf_p===17 || conf
       Status : status,
       RTC_Port : conf_p || 0,
       RTC_status : conf_s || 0,
-  };}
-  else if(v4==="#"){
+  };}}
+  if(v4==="#"){
      return {
       Port: ports,
       Battery: battery,
